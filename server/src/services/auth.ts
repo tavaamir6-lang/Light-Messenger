@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET ?? "development-only-secret";
+const JWT_SECRET = process.env.JWT_SECRET ?? "";
 export const ACCESS_CODE = process.env.LIGHT_MESSENGER_ACCESS_CODE ?? "";
 
 export async function hashPassword(password: string): Promise<string> {
@@ -13,13 +13,13 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
 }
 
 export function issueAccessToken(userId: string): string {
+  if (!JWT_SECRET) throw new Error("JWT_SECRET is not configured");
   return jwt.sign({ sub: userId }, JWT_SECRET, { expiresIn: "30d" });
 }
 
 export function verifyAccessToken(token: string): string {
+  if (!JWT_SECRET) throw new Error("JWT_SECRET is not configured");
   const payload = jwt.verify(token, JWT_SECRET) as jwt.JwtPayload;
-  if (!payload.sub || typeof payload.sub !== "string") {
-    throw new Error("invalid_token");
-  }
+  if (!payload.sub || typeof payload.sub !== "string") throw new Error("invalid_token");
   return payload.sub;
 }
