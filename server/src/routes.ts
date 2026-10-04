@@ -1,4 +1,5 @@
 import type { FastifyInstance } from "fastify";
+import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import { db } from "./infra/postgres.js";
 import { ACCESS_CODE, issueAccessToken } from "./services/auth.js";
@@ -63,7 +64,7 @@ export async function registerRoutes(app: FastifyInstance) {
       return reply.code(409).send({ error: "name_already_registered" });
     }
 
-    const username = `user_${crypto.randomUUID().replaceAll("-", "").slice(0, 20)}`;
+    const username = `user_${randomUUID().replaceAll("-", "").slice(0, 20)}`;
     const created = await db.query(
       "insert into users (username, display_name, password_hash) values ($1, $2, $3) returning id, display_name",
       [username, name, "access-code-only"]
