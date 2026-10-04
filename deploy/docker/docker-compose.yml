@@ -26,7 +26,8 @@ services:
       PORT: 8080
       DATABASE_URL: postgres://light:light@postgres:5432/lightmessenger
       REDIS_URL: redis://redis:6379
-      JWT_SECRET: change-me
+      JWT_SECRET: ${JWT_SECRET:?Set_JWT_SECRET}
+      LIGHT_MESSENGER_ACCESS_CODE: ${LIGHT_MESSENGER_ACCESS_CODE:?Set_LIGHT_MESSENGER_ACCESS_CODE_to_1389}
       CORS_ORIGIN: "*"
     depends_on:
       - postgres
