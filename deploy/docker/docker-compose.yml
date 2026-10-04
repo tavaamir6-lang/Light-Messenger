@@ -1,0 +1,38 @@
+services:
+  postgres:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: lightmessenger
+      POSTGRES_USER: light
+      POSTGRES_PASSWORD: light
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:8-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+  server:
+    build:
+      context: ../../server
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      PORT: 8080
+      DATABASE_URL: postgres://light:light@postgres:5432/lightmessenger
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: change-me
+      CORS_ORIGIN: "*"
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data:
