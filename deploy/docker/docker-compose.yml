@@ -5,17 +5,31 @@ services:
     environment:
       POSTGRES_DB: lightmessenger
       POSTGRES_USER: light
-      POSTGRES_PASSWORD: light
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set_POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
+      - ../../database/migrations/001_initial.sql:/docker-entrypoint-initdb.d/001_initial.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U light -d lightmessenger"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    expose:
+      - "5432"
 
   redis:
     image: redis:8-alpine
     restart: unless-stopped
-    ports:
-      - "6379:6379"
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    expose:
+      - "6379"
 
   server:
     build:
@@ -24,16 +38,19 @@ services:
     restart: unless-stopped
     environment:
       PORT: 8080
-      DATABASE_URL: postgres://light:light@postgres:5432/lightmessenger
+      DATABASE_URL: postgres://light:${POSTGRES_PASSWORD}@postgres:5432/lightmessenger
       REDIS_URL: redis://redis:6379
       JWT_SECRET: ${JWT_SECRET:?Set_JWT_SECRET}
-      LIGHT_MESSENGER_ACCESS_CODE: ${LIGHT_MESSENGER_ACCESS_CODE:?Set_LIGHT_MESSENGER_ACCESS_CODE_to_1389}
-      CORS_ORIGIN: "*"
+      LIGHT_MESSENGER_ACCESS_CODE: ${LIGHT_MESSENGER_ACCESS_CODE:?Set_LIGHT_MESSENGER_ACCESS_CODE}
+      CORS_ORIGIN: ${CORS_ORIGIN:-*}
     depends_on:
-      - postgres
-      - redis
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     ports:
       - "8080:8080"
 
 volumes:
   postgres_data:
+  redis_data:
