@@ -12,3 +12,9 @@ Rules for Light Messenger:
 
 Technical distinction:
 Telegram Android is a client for Telegram infrastructure and MTProto. Copying its Android client does not create an independent messenger server. Light Messenger therefore starts with its own REST/WebSocket protocol and can selectively incorporate compatible open-source components later.
+
+
+Implementation plan:
+- Use Telegram as a UX/architecture reference for chat lists, message states, media pipelines, reconnect behavior and notification flows.
+- Keep Light Messenger identity, backend, API and storage independent.
+- If Telegram GPL source is incorporated later, isolate it and preserve the required license notices; do not mix proprietary code into a GPL-derived component without checking license compatibility.
