@@ -1,0 +1,21 @@
+# Android
+.gradle/
+.idea/
+*.iml
+local.properties
+build/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Server
+server/node_modules/
+server/dist/
+.env
+.env.*
+!.env.example
+
+# IDE / OS
+.vscode/
+.DS_Store
+Thumbs.db
