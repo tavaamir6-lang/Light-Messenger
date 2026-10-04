@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET ?? "development-only-secret";
-export const ACCESS_CODE = process.env.LIGHT_MESSENGER_ACCESS_CODE ?? "1389";
+export const ACCESS_CODE = process.env.LIGHT_MESSENGER_ACCESS_CODE ?? "";
 
 export async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, 12);
