@@ -2,13 +2,15 @@ create extension if not exists pgcrypto;
 
 create table if not exists users (
     id uuid primary key default gen_random_uuid(),
-    username varchar(32) unique not null,
+    username varchar(64) unique not null,
     display_name varchar(80) not null,
     password_hash text not null,
     avatar_url text,
     created_at timestamptz not null default now(),
     updated_at timestamptz not null default now()
 );
+
+create unique index if not exists idx_users_display_name_lower on users (lower(display_name));
 
 create table if not exists conversations (
     id uuid primary key default gen_random_uuid(),
