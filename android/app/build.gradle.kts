@@ -11,19 +11,12 @@ android {
         applicationId = "com.lightspeed.messenger"
         minSdk = 26
         targetSdk = 37
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = 2
+        versionName = "0.2.0"
     }
-    buildFeatures {
-        compose = true
-        buildConfig = true
-    }
-    buildTypes {
-        release { isMinifyEnabled = false }
-    }
-    packaging {
-        resources.excludes += "/META-INF/{AL2.0,LGPL2.1}"
-    }
+    buildFeatures { compose = true; buildConfig = true }
+    buildTypes { release { isMinifyEnabled = false } }
+    packaging { resources.excludes += "/META-INF/{AL2.0,LGPL2.1}" }
 }
 kotlin { jvmToolchain(17) }
 dependencies {
@@ -37,6 +30,7 @@ dependencies {
     implementation("io.ktor:ktor-client-core:3.5.2")
     implementation("io.ktor:ktor-client-okhttp:3.5.2")
     implementation("io.ktor:ktor-client-content-negotiation:3.5.2")
+    implementation("io.ktor:ktor-client-websockets:3.5.2")
     implementation("io.ktor:ktor-serialization-kotlinx-json:3.5.2")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
     debugImplementation("androidx.compose.ui:ui-tooling")
