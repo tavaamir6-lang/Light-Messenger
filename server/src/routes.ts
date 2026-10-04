@@ -6,7 +6,7 @@ import { ACCESS_CODE, issueAccessToken, verifyAccessToken } from "./services/aut
 
 const authSchema = z.object({
   name: z.string().trim().min(2).max(80),
-  code: z.string().regex(/^\\d{4}$/, "code must be 4 digits")
+  code: z.string().regex(/^\d{4}$/, "code must be 4 digits")
 });
 
 async function ensurePrivateConversation(userA:string,userB:string):Promise<string>{
